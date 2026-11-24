@@ -109,6 +109,11 @@ async function collect() {
     return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || a.name.localeCompare(b.name);
   });
 
+  // The account's GitHub avatar is the site logo and favicon.
+  const user = await gh(`/users/${site.owner}`);
+  await mkdir(join(ROOT, 'assets'), { recursive: true });
+  await writeFile(join(ROOT, 'assets', 'avatar.png'), await download(`${user.avatar_url}${user.avatar_url.includes('?') ? '&' : '?'}s=128`));
+
   const shotsRoot = join(ROOT, 'assets', 'screenshots');
   await rm(shotsRoot, { recursive: true, force: true });
 
@@ -191,7 +196,6 @@ const icon = {
   download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   tag: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>',
   expand: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  ember: '<svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="eg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e2502a"/><stop offset="1" stop-color="#ffc35a"/></linearGradient></defs><path fill="url(#eg)" d="M16 2c1.5 5.2 7.5 8.4 7.5 15.5A7.5 7.5 0 0 1 16 25a7.5 7.5 0 0 1-7.5-7.5c0-3.4 1.8-5.6 3.4-7.2.2 2.3 1.2 3.9 2.7 4.7C14 10.6 14.6 6.3 16 2Z"/><path fill="#1a120e" opacity=".55" d="M16 14c.9 2.6 3.4 3.8 3.4 6.6a3.4 3.4 0 0 1-6.8 0c0-1.7.9-2.7 1.6-3.4.2 1 .6 1.6 1.2 1.9-.3-1.8.1-3.6.6-5.1Z"/><circle cx="7" cy="28" r="1.2" fill="#f08a3c"/><circle cx="25" cy="29" r="1" fill="#ffc35a"/></svg>',
 };
 
 function img(shot, { cls = '', eager = false, sizes } = {}) {
@@ -262,9 +266,9 @@ function moduleSection(m, i) {
 }
 
 function render(mods) {
+  const avatar = '<img class="avatar" src="assets/avatar.png" alt="" width="32" height="32">';
   const heroShots = mods.slice(0, 4).map((m) => ({ m, s: m.shots[0] }));
   const ogImage = mods[0]?.shots[0]?.src;
-  const totalShots = mods.reduce((n, m) => n + m.shots.length, 0);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -280,7 +284,7 @@ function render(mods) {
   <meta property="og:url" content="https://${site.owner}.github.io/">
   ${ogImage ? `<meta property="og:image" content="https://${site.owner}.github.io/${esc(ogImage)}">
   <meta name="twitter:card" content="summary_large_image">` : ''}
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/avatar.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap">
@@ -290,7 +294,7 @@ function render(mods) {
   <a class="skip" href="#modules">Skip to the modules</a>
   <header class="topbar">
     <nav class="wrap nav" aria-label="Main">
-      <a class="brand" href="#top">${icon.ember}<span>emberite</span></a>
+      <a class="brand" href="#top">${avatar}<span>emberite</span></a>
       <ul class="nav-links">
         ${mods.map((m) => `<li><a href="#${esc(m.name)}" style="--accent:${esc(m.accent)}">${esc(m.short)}</a></li>`).join('\n        ')}
       </ul>
@@ -303,9 +307,8 @@ function render(mods) {
       <div class="embers" aria-hidden="true">${Array.from({ length: 18 }, (_, i) => `<i style="--x:${(i * 37) % 100}%;--d:${6 + (i * 7) % 9}s;--delay:-${(i * 13) % 11}s;--s:${2 + (i % 3)}px"></i>`).join('')}</div>
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="kicker">Foundry VTT · Daggerheart</p>
-          <h1>Tools for the tables of <em>Daggerheart’s</em> campaign frames</h1>
-          <p class="lede">${mods.length} free, open-source modules that turn a campaign frame’s rules into things the whole table can see and touch: a cooking pot, faction banners, a hex crawl and a night sky.</p>
+          <h1>Tools for the tables of Daggerheart’s campaign frames</h1>
+          <p class="lede">Free, open-source Foundry VTT modules that turn a campaign frame’s rules into things the whole table can see and touch.</p>
           <div class="actions">
             <a class="btn primary" href="#modules">Browse the modules</a>
             <a class="btn ghost" href="#install">How to install</a>
@@ -317,13 +320,7 @@ function render(mods) {
       </div>
     </section>
 
-    <section class="wrap strip" aria-label="At a glance">
-      <ul class="stats">
-        <li><strong>${mods.length}</strong><span>campaign frames</span></li>
-        <li><strong>${totalShots}</strong><span>screenshots below</span></li>
-        <li><strong>v${esc(mods[0]?.foundry.minimum ?? '14')}</strong><span>Foundry VTT</span></li>
-        <li><strong>MIT</strong><span>open source</span></li>
-      </ul>
+    <section class="wrap strip" aria-label="Note">
       <p class="note"><strong>One frame at a time.</strong> Each module is built for its own campaign frame, so only one of them can be active in a world. Enabling a second one prompts the GM to choose.</p>
     </section>
 
@@ -343,7 +340,7 @@ function render(mods) {
 
   <footer class="footer">
     <div class="wrap">
-      <p class="brand small">${icon.ember}<span>emberite</span></p>
+      <p class="brand small">${avatar}<span>emberite</span></p>
       <p>The modules’ code is released under the MIT License. They are unofficial fan works, not affiliated with Darrington Press, Critical Role or Foundry Gaming. Daggerheart content and art are loaded from the official modules you own and are not distributed here; the screenshots show those modules in use.</p>
       <p class="muted">This product includes materials from the Daggerheart System Reference Document 2.0, © Critical Role, LLC. under the terms of the Darrington Press Community Gaming (DPCGL) License. More information can be found at <a href="https://www.daggerheart.com">daggerheart.com</a>. There are no previous modifications by others.</p>
       <p class="muted">Built from the <a href="https://github.com/${site.owner}?tab=repositories&amp;q=${encodeURIComponent(site.repoPrefix)}">${esc(site.repoPrefix)}* repositories</a> on ${esc(date(new Date().toISOString()))}.</p>
