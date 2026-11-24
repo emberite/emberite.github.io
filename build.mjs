@@ -40,7 +40,8 @@ async function gh(path, { raw = false, optional = false } = {}) {
     },
   });
   if (!res.ok) {
-    if (optional && res.status === 404) return null;
+    // 404: not there; 409: the repository is empty (no commits yet).
+    if (optional && (res.status === 404 || res.status === 409)) return null;
     throw new Error(`GitHub ${res.status} for ${path}: ${await res.text()}`);
   }
   return raw ? res.text() : res.json();
@@ -111,6 +112,14 @@ function dep(rel) {
   return { id: rel.id, name, url, min };
 }
 
+// A repo that isn't ready to show (empty, or no screenshots yet) is left off the
+// site instead of failing the whole build. Other errors (network, rate limits)
+// still fail it, so a hiccup never publishes a site with modules missing.
+function skip(name, reason) {
+  console.log(`skipped: ${reason}`);
+  if (process.env.GITHUB_ACTIONS) console.log(`::warning title=${name} not on the site::${reason}`);
+}
+
 async function collect() {
   const repos = (await gh(`/users/${site.owner}/repos?per_page=100&type=owner`))
     .filter((r) => r.name.startsWith(site.repoPrefix) && !r.fork && !r.archived && !r.private);
@@ -134,8 +143,9 @@ async function collect() {
     const [release, readme, tree] = await Promise.all([
       gh(`/repos/${site.owner}/${name}/releases/latest`, { optional: true }),
       gh(`/repos/${site.owner}/${name}/readme`, { raw: true, optional: true }),
-      gh(`/repos/${site.owner}/${name}/git/trees/${repo.default_branch}?recursive=1`),
+      gh(`/repos/${site.owner}/${name}/git/trees/${repo.default_branch}?recursive=1`, { optional: true }),
     ]);
+    if (!tree) { skip(name, 'the repository is empty'); continue; }
 
     // Prefer the released module.json: it carries the stamped version.
     let manifest = null;
@@ -154,7 +164,7 @@ async function collect() {
     const shown = readme ? readmeImages(readme) : new Map();
     const paths = [...shown.keys()].filter((p) => blobs.has(p));
     for (const p of [...blobs].sort()) if (p.startsWith('docs/') && IMAGE.test(p) && !paths.includes(p)) paths.push(p);
-    if (!paths.length) throw new Error(`${name} has no screenshots: no README images and no images under docs/`);
+    if (!paths.length) { skip(name, 'no screenshots yet (no README images and no images under docs/)'); continue; }
 
     await mkdir(join(shotsRoot, name), { recursive: true });
     const shots = [];
@@ -201,6 +211,7 @@ async function collect() {
     });
     console.log(`v${result.at(-1).version}, ${shots.length} screenshots`);
   }
+  if (!result.length) throw new Error('No dh-* repository could be shown; not overwriting the site.');
   return result;
 }
 
@@ -359,7 +370,7 @@ function render(mods) {
     </section>
 
     <section class="wrap strip" aria-label="Notes">
-      <p class="note"><strong>No AI artwork.</strong> The modules use no AI-generated art. Their images come from Foundry VTT, the Daggerheart system, or the official Daggerheart Core Rulebook and Hope &amp; Fear modules. Horizon’s hex map tiles are <a href="https://cuddlyclover.itch.io/fantasy-hex-tiles">Fantasy Hex Tiles</a> by The Clover Patch (CC BY 4.0). Custom Beast Feast artwork and tokens for Hotpot have been commissioned from a human artist and will be added once they’re ready.</p>
+      <p class="note"><strong>AI Code - Not AI Art.</strong> The modules use no AI-generated art. Their images come from Foundry VTT, the Daggerheart system, or the official Daggerheart Core Rulebook and Hope &amp; Fear modules. Horizon’s hex map tiles are <a href="https://cuddlyclover.itch.io/fantasy-hex-tiles">Fantasy Hex Tiles</a> by The Clover Patch (CC BY 4.0). Custom Beast Feast artwork and tokens for Hotpot have been commissioned from a human artist and will be added once they’re ready.</p>
       <p class="note"><strong>One frame at a time.</strong> Each module is built for its own campaign frame, so only one of them can be active in a world. Enabling a second one prompts the GM to choose.</p>
     </section>
 
