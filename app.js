@@ -15,6 +15,29 @@ document.querySelectorAll('button.copy').forEach((btn) => {
   });
 });
 
+// Hero stack: every few seconds the bottom card moves to the top, so each
+// screenshot gets its turn fully uncovered. Pauses while hovered or hidden.
+const stack = document.querySelector('.hero-stack');
+if (stack) {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const z = (card) => Number(getComputedStyle(card).getPropertyValue('--z')) || 0;
+  const order = [...stack.querySelectorAll('.card')].sort((a, b) => z(a) - z(b));
+  const apply = () => order.forEach((card, i) => card.style.setProperty('--z', i + 1));
+  let paused = false;
+  stack.addEventListener('mouseenter', () => { paused = true; });
+  stack.addEventListener('mouseleave', () => { paused = false; });
+
+  setInterval(() => {
+    if (paused || document.hidden || order.length < 2) return;
+    const card = order.shift();
+    order.push(card);
+    if (reduced) return apply();
+    card.classList.add('shuffling');
+    setTimeout(apply, 500); // halfway, while the card is clear of the stack
+    card.addEventListener('animationend', () => card.classList.remove('shuffling'), { once: true });
+  }, 3500);
+}
+
 // Screenshot lightbox, one gallery per module.
 const dialog = document.querySelector('.lightbox');
 const lbImg = dialog.querySelector('img');

@@ -100,8 +100,17 @@ svg { width: 1em; height: 1em; flex: none; }
 .hero-stack .card {
   position: absolute; width: 64%; border-radius: 12px; overflow: hidden;
   box-shadow: var(--shadow); text-decoration: none;
-  transition: transform .5s cubic-bezier(.2,.7,.2,1), z-index 0s .1s;
+  z-index: var(--z);
+  transition: rotate .5s cubic-bezier(.2,.7,.2,1), scale .5s cubic-bezier(.2,.7,.2,1);
   border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+}
+/* app.js moves the bottom card to the top every few seconds: it slides out
+   to its side, and its z-index changes while it's clear of the others. */
+.hero-stack .card.shuffling { animation: shuffle 1s cubic-bezier(.45,0,.2,1); }
+@keyframes shuffle {
+  0%   { translate: 0 0; scale: 1; }
+  45%, 55% { translate: calc(var(--dir) * 58%) -4%; scale: .97; }
+  100% { translate: 0 0; scale: 1; }
 }
 .hero-stack .card img { width: 100%; aspect-ratio: 16 / 11; object-fit: cover; object-position: top left; }
 .hero-stack .card span {
@@ -109,11 +118,11 @@ svg { width: 1em; height: 1em; flex: none; }
   font-size: 12px; font-weight: 600; background: rgb(0 0 0 / .65); color: var(--accent);
   backdrop-filter: blur(6px);
 }
-.hero-stack .c0 { left: 0;   top: 4%;  transform: rotate(-5deg); z-index: 3; }
-.hero-stack .c1 { right: 0;  top: 0;   transform: rotate(4deg);  z-index: 2; }
-.hero-stack .c2 { left: 8%;  bottom: 0; transform: rotate(3deg);  z-index: 1; }
-.hero-stack .c3 { right: 4%; bottom: 6%; transform: rotate(-3deg); z-index: 4; }
-.hero-stack .card:hover { transform: rotate(0) scale(1.04); z-index: 10; }
+.hero-stack .c0 { left: 0;   top: 4%;   rotate: -5deg; --z: 3; --dir: -1; }
+.hero-stack .c1 { right: 0;  top: 0;    rotate: 4deg;  --z: 2; --dir: 1; }
+.hero-stack .c2 { left: 8%;  bottom: 0; rotate: 3deg;  --z: 1; --dir: -1; }
+.hero-stack .c3 { right: 4%; bottom: 6%; rotate: -3deg; --z: 4; --dir: 1; }
+.hero-stack .card:hover { rotate: 0deg; scale: 1.04; z-index: 10; }
 
 .embers { position: absolute; inset: 0; pointer-events: none; }
 .embers i {
