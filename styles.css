@@ -54,12 +54,12 @@ svg { width: 1em; height: 1em; flex: none; }
 .brand.small { font-size: 18px; margin: 0 0 12px; }
 .nav-links { display: flex; gap: 4px; list-style: none; margin: 0 0 0 auto; padding: 0; }
 .nav-links a {
-  display: block; white-space: nowrap; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  display: block; white-space: nowrap; padding: 6px 12px; border-radius: 5px; text-decoration: none;
   font-size: 14px; font-weight: 500; color: var(--muted); transition: color .2s, background .2s;
 }
 .nav-links a:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 16%, transparent); }
 .nav-support {
-  padding: 6px 14px; border-radius: 999px; text-decoration: none; font-size: 14px; font-weight: 600;
+  padding: 6px 14px; border-radius: 5px; text-decoration: none; font-size: 14px; font-weight: 600;
   color: var(--ember-hot); border: 1px solid color-mix(in srgb, var(--ember) 45%, transparent); transition: background .2s;
 }
 .nav-support:hover { background: color-mix(in srgb, var(--ember) 16%, transparent); }
