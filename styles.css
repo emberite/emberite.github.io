@@ -54,7 +54,7 @@ svg { width: 1em; height: 1em; flex: none; }
 .brand.small { font-size: 18px; margin: 0 0 12px; }
 .nav-links { display: flex; gap: 4px; list-style: none; margin: 0 0 0 auto; padding: 0; }
 .nav-links a {
-  display: block; padding: 6px 12px; border-radius: 999px; text-decoration: none;
+  display: block; white-space: nowrap; padding: 6px 12px; border-radius: 999px; text-decoration: none;
   font-size: 14px; font-weight: 500; color: var(--muted); transition: color .2s, background .2s;
 }
 .nav-links a:hover { color: var(--text); background: color-mix(in srgb, var(--accent) 16%, transparent); }
@@ -67,7 +67,7 @@ svg { width: 1em; height: 1em; flex: none; }
 .nav-gh { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--muted); transition: color .2s, background .2s; }
 .nav-gh:hover { color: var(--text); background: var(--panel-2); }
 .nav-gh svg { width: 20px; height: 20px; }
-@media (max-width: 720px) {
+@media (max-width: 1000px) {
   .nav-links { display: none; }
   .nav-support { margin-left: auto; }
 }
@@ -128,6 +128,8 @@ svg { width: 1em; height: 1em; flex: none; }
 .hero-stack .c1 { right: 0;  top: 0;    rotate: 4deg;  --z: 2; --dir: 1; }
 .hero-stack .c2 { left: 8%;  bottom: 0; rotate: 3deg;  --z: 1; --dir: -1; }
 .hero-stack .c3 { right: 4%; bottom: 6%; rotate: -3deg; --z: 4; --dir: 1; }
+.hero-stack .c4 { left: 18%; top: 22%; rotate: 1deg;  --z: 0; --dir: -1; }
+.hero-stack .c5 { right: 14%; top: 14%; rotate: -2deg; --z: 0; --dir: 1; }
 .hero-stack .card:hover { rotate: 0deg; scale: 1.04; z-index: 10; }
 
 .embers { position: absolute; inset: 0; pointer-events: none; }

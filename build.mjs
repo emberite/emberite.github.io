@@ -316,7 +316,8 @@ function supportRow(m) {
 
 function render(mods) {
   const avatar = '<img class="avatar" src="assets/avatar.png" alt="" width="32" height="32">';
-  const heroShots = mods.slice(0, 4).map((m) => ({ m, s: m.shots[0] }));
+  // The hero stack has slots for six cards (styles.css .c0–.c5); app.js cycles them.
+  const heroShots = mods.slice(0, 6).map((m) => ({ m, s: m.shots[0] }));
   const ogImage = mods[0]?.shots[0]?.src;
   return `<!doctype html>
 <html lang="en">
@@ -383,7 +384,7 @@ function render(mods) {
     <section class="wrap howto" id="install" aria-labelledby="install-title">
       <h2 id="install-title">Installing a module</h2>
       <ol class="steps">
-        <li><span>1</span><div><h3>Get the requirements</h3><p>Foundry VTT v14, the Daggerheart system 2.12 or later, and the official content module the frame comes from (Core Rulebook or Hope &amp; Fear). The modules load that content at runtime and include none of it.</p></div></li>
+        <li><span>1</span><div><h3>Get the requirements</h3><p>Foundry VTT v14, the Daggerheart system version listed under the module, and the official content module the frame comes from (Core Rulebook or Hope &amp; Fear). The modules load that content at runtime and include none of it.</p></div></li>
         <li><span>2</span><div><h3>Paste the manifest</h3><p>In Foundry’s setup screen, open <strong>Add-on Modules → Install Module</strong>, paste the module’s manifest URL from above and click <strong>Install</strong>.</p></div></li>
         <li><span>3</span><div><h3>Enable it in your world</h3><p>Turn it on under <strong>Manage Modules</strong>. Its tools appear in the Daggerheart sidebar menu, under the campaign frame’s name.</p></div></li>
       </ol>
