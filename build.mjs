@@ -316,8 +316,8 @@ function supportRow(m) {
 
 function render(mods) {
   const avatar = '<img class="avatar" src="assets/avatar.png" alt="" width="32" height="32">';
-  // The hero stack has slots for six cards (styles.css .c0–.c5); app.js cycles them.
-  const heroShots = mods.slice(0, 6).map((m) => ({ m, s: m.shots[0] }));
+  // Hero carousel: each module's lead screenshot.
+  const heroShots = mods.map((m) => ({ m, s: m.shots[0] }));
   const ogImage = mods[0]?.shots[0]?.src;
   return `<!doctype html>
 <html lang="en">
@@ -366,9 +366,21 @@ function render(mods) {
             <a class="btn ghost" href="#install">How to install</a>
           </div>
         </div>
-        <div class="hero-stack" aria-hidden="true">
-          ${heroShots.map(({ m, s }, i) => `<a href="#${esc(m.name)}" tabindex="-1" class="card c${i}" style="--accent:${esc(m.accent)}">${img(s, { eager: i < 2, sizes: '(max-width: 960px) 70vw, 420px' })}<span>${esc(m.short)}</span></a>`).join('\n          ')}
-        </div>
+        <section class="carousel" aria-roledescription="carousel" aria-label="Module screenshots">
+          <div class="carousel-frame">
+            <ul class="carousel-track" aria-live="polite">
+              ${heroShots.map(({ m, s }, i) => `<li class="slide" aria-roledescription="slide" aria-label="${i + 1} of ${heroShots.length}: ${esc(m.short)}" style="--accent:${esc(m.accent)}"${i ? ' inert' : ''}>
+                <a href="#${esc(m.name)}">${img(s, { eager: i === 0, sizes: '(max-width: 960px) 100vw, 560px' })}</a>
+                <div class="slide-caption"><a href="#${esc(m.name)}">${esc(m.short)}</a><span>${esc(m.tagline)}</span></div>
+              </li>`).join('\n              ')}
+            </ul>
+            <button class="carousel-nav prev" type="button" aria-label="Previous module">‹</button>
+            <button class="carousel-nav next" type="button" aria-label="Next module">›</button>
+          </div>
+          <div class="carousel-dots">
+            ${heroShots.map(({ m }, i) => `<button type="button" style="--accent:${esc(m.accent)}" aria-label="Show ${esc(m.short)}"${i ? '' : ' aria-current="true"'}></button>`).join('')}
+          </div>
+        </section>
       </div>
     </section>
 
@@ -395,7 +407,7 @@ function render(mods) {
       <p class="section-lede">Found a bug or have an idea? Open an issue on the module’s GitHub repository. You need a free <a href="https://github.com/signup">GitHub account</a>. Search the open issues first: if someone already reported it, add a comment or a 👍 there instead.</p>
       ${site.discord ? `<div class="discord-callout">
         <span class="discord-icon">${icon.discord}</span>
-        <p><strong>Questions, or want to share how your table uses the modules?</strong> Join the emberite Discord to chat, ask for help and hear about new releases.</p>
+        <p><strong>Questions, or want to share how your table uses the modules?</strong><br>Join the emberite Discord to chat, ask for help and hear about new releases.</p>
         <a class="btn primary" href="${esc(site.discord)}">Join the Discord</a>
       </div>` : ''}
       <div class="support-grid">

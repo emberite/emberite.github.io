@@ -15,27 +15,48 @@ document.querySelectorAll('button.copy').forEach((btn) => {
   });
 });
 
-// Hero stack: every few seconds the bottom card moves to the top, so each
-// screenshot gets its turn fully uncovered. Pauses while hovered or hidden.
-const stack = document.querySelector('.hero-stack');
-if (stack) {
+// Hero carousel: advances every few seconds; pauses while hovered, focused or
+// hidden, and doesn't autoplay for people who prefer reduced motion.
+const carousel = document.querySelector('.carousel');
+if (carousel) {
+  const track = carousel.querySelector('.carousel-track');
+  const slides = [...track.children];
+  const dots = [...carousel.querySelectorAll('.carousel-dots button')];
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const z = (card) => Number(getComputedStyle(card).getPropertyValue('--z')) || 0;
-  const order = [...stack.querySelectorAll('.card')].sort((a, b) => z(a) - z(b));
-  const apply = () => order.forEach((card, i) => card.style.setProperty('--z', i + 1));
+  let at = 0;
   let paused = false;
-  stack.addEventListener('mouseenter', () => { paused = true; });
-  stack.addEventListener('mouseleave', () => { paused = false; });
-
-  setInterval(() => {
-    if (paused || document.hidden || order.length < 2) return;
-    const card = order.shift();
-    order.push(card);
-    if (reduced) return apply();
-    card.classList.add('shuffling');
-    setTimeout(apply, 500); // halfway, while the card is clear of the stack
-    card.addEventListener('animationend', () => card.classList.remove('shuffling'), { once: true });
-  }, 3500);
+  // Screenshots load lazily; start the current and next ones before they slide in.
+  const preload = (j) => { const im = slides[(j + slides.length) % slides.length].querySelector('img'); if (im) im.loading = 'eager'; };
+  const go = (i) => {
+    at = (i + slides.length) % slides.length;
+    preload(at); preload(at + 1); preload(at - 1);
+    track.style.transform = `translateX(${-100 * at}%)`;
+    slides.forEach((s, j) => { s.inert = j !== at; });
+    dots.forEach((d, j) => d.setAttribute('aria-current', String(j === at)));
+  };
+  addEventListener('load', () => { preload(1); preload(-1); });
+  carousel.querySelector('.prev').addEventListener('click', () => go(at - 1));
+  carousel.querySelector('.next').addEventListener('click', () => go(at + 1));
+  dots.forEach((d, j) => d.addEventListener('click', () => go(j)));
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') go(at - 1);
+    if (e.key === 'ArrowRight') go(at + 1);
+  });
+  carousel.addEventListener('mouseenter', () => { paused = true; });
+  carousel.addEventListener('mouseleave', () => { paused = false; });
+  carousel.addEventListener('focusin', () => { paused = true; });
+  carousel.addEventListener('focusout', () => { paused = false; });
+  let touchStart = null;
+  track.addEventListener('touchstart', (e) => { touchStart = e.touches[0].clientX; }, { passive: true });
+  track.addEventListener('touchend', (e) => {
+    if (touchStart === null) return;
+    const dx = e.changedTouches[0].clientX - touchStart;
+    if (Math.abs(dx) > 50) go(at + (dx < 0 ? 1 : -1));
+    touchStart = null;
+  });
+  if (!reduced && slides.length > 1) {
+    setInterval(() => { if (!paused && !document.hidden) go(at + 1); }, 5000);
+  }
 }
 
 // Screenshot lightbox, one gallery per module.

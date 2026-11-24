@@ -102,35 +102,38 @@ svg { width: 1em; height: 1em; flex: none; }
 .hero h1 { font-size: clamp(36px, 5.6vw, 64px); max-width: 15ch; }
 .lede { margin: 22px 0 30px; max-width: 52ch; font-size: clamp(17px, 1.6vw, 19px); color: var(--muted); }
 
-.hero-stack { position: relative; aspect-ratio: 1 / .82; }
-.hero-stack .card {
-  position: absolute; width: 64%; border-radius: 12px; overflow: hidden;
-  box-shadow: var(--shadow); text-decoration: none;
-  z-index: var(--z);
-  transition: rotate .5s cubic-bezier(.2,.7,.2,1), scale .5s cubic-bezier(.2,.7,.2,1);
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+/* Hero carousel: one module's lead screenshot at a time; app.js advances it. */
+.carousel { min-width: 0; }
+.carousel-frame {
+  position: relative; overflow: hidden; border-radius: 14px;
+  border: 1px solid var(--line, rgb(255 255 255 / .08)); background: rgb(0 0 0 / .35); box-shadow: var(--shadow);
 }
-/* app.js moves the bottom card to the top every few seconds: it slides out
-   to its side, and its z-index changes while it's clear of the others. */
-.hero-stack .card.shuffling { animation: shuffle 1s cubic-bezier(.45,0,.2,1); }
-@keyframes shuffle {
-  0%   { translate: 0 0; scale: 1; }
-  45%, 55% { translate: calc(var(--dir) * 58%) -4%; scale: .97; }
-  100% { translate: 0 0; scale: 1; }
+.carousel-track { display: flex; margin: 0; padding: 0; list-style: none; transition: transform .6s cubic-bezier(.45,0,.2,1); }
+.slide { flex: 0 0 100%; min-width: 0; }
+.slide > a { display: block; }
+.slide img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+.slide-caption {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 14px 18px 16px;
+  border-top: 3px solid var(--accent); background: rgb(0 0 0 / .45); min-height: 4.6em;
 }
-.hero-stack .card img { width: 100%; aspect-ratio: 16 / 11; object-fit: cover; object-position: top left; }
-.hero-stack .card span {
-  position: absolute; left: 10px; bottom: 10px; padding: 3px 10px; border-radius: 999px;
-  font-size: 12px; font-weight: 600; background: rgb(0 0 0 / .65); color: var(--accent);
-  backdrop-filter: blur(6px);
+.slide-caption a { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; color: var(--accent); text-decoration: none; }
+.slide-caption a:hover { text-decoration: underline; }
+.slide-caption span { color: var(--muted); font-size: 14px; flex: 1 1 18ch; }
+.carousel-nav {
+  position: absolute; top: calc(50% - 40px); translate: 0 -50%; width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / .18); background: rgb(0 0 0 / .6); color: #fff; font-size: 26px; line-height: 1;
+  cursor: pointer; backdrop-filter: blur(6px); opacity: .85; transition: opacity .2s, background .2s;
 }
-.hero-stack .c0 { left: 0;   top: 4%;   rotate: -5deg; --z: 3; --dir: -1; }
-.hero-stack .c1 { right: 0;  top: 0;    rotate: 4deg;  --z: 2; --dir: 1; }
-.hero-stack .c2 { left: 8%;  bottom: 0; rotate: 3deg;  --z: 1; --dir: -1; }
-.hero-stack .c3 { right: 4%; bottom: 6%; rotate: -3deg; --z: 4; --dir: 1; }
-.hero-stack .c4 { left: 18%; top: 22%; rotate: 1deg;  --z: 0; --dir: -1; }
-.hero-stack .c5 { right: 14%; top: 14%; rotate: -2deg; --z: 0; --dir: 1; }
-.hero-stack .card:hover { rotate: 0deg; scale: 1.04; z-index: 10; }
+.carousel-nav:hover, .carousel-nav:focus-visible { opacity: 1; background: rgb(0 0 0 / .8); }
+.carousel-nav.prev { left: 12px; }
+.carousel-nav.next { right: 12px; }
+.carousel-dots { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
+.carousel-dots button {
+  width: 10px; height: 10px; padding: 0; border-radius: 999px; border: 0; cursor: pointer;
+  background: rgb(255 255 255 / .25); transition: width .3s, background .3s;
+}
+.carousel-dots button[aria-current="true"] { width: 28px; background: var(--accent); }
+@media (prefers-reduced-motion: reduce) { .carousel-track { transition: none; } }
 
 .embers { position: absolute; inset: 0; pointer-events: none; }
 .embers i {
@@ -147,7 +150,7 @@ svg { width: 1em; height: 1em; flex: none; }
 
 @media (max-width: 960px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .hero-stack { max-width: 560px; width: 100%; margin-inline: auto; }
+  .carousel { max-width: 640px; width: 100%; margin-inline: auto; }
 }
 
 /* ---------- strip ---------- */
