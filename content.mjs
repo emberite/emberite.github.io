@@ -11,13 +11,29 @@ export const site = {
   discord: 'https://discord.gg/PjqhABeTm',
   title: 'emberite · Daggerheart modules for Foundry VTT',
   description:
-    'Free Foundry VTT modules for the campaign frames of Daggerheart: cooking with Hotpot, factions with Five Banners, hex crawls with Horizon, the Weredragon table tools and colossus fights with Colossus.',
+    'Free Foundry VTT modules for Daggerheart: class feature automation with Tweaks, cooking with Hotpot, factions with Five Banners, hex crawls with Horizon, the Weredragon table tools and colossus fights with Colossus.',
 };
 
 // Order of the sections on the page. Repos not listed here come after, by name.
-export const order = ['dh-hotpot', 'dh-5banners', 'dh-horizon', 'dh-weredragon', 'dh-colossus'];
+export const order = ['dh-emberite-tweaks', 'dh-hotpot', 'dh-5banners', 'dh-horizon', 'dh-weredragon', 'dh-colossus'];
 
 export const modules = {
+  'dh-emberite-tweaks': {
+    short: 'Tweaks',
+    frame: 'Class features',
+    source: 'Any campaign',
+    accent: '#e8645a',
+    tagline: 'A pull-out drawer that automates the class features the system leaves to the table.',
+    blurb:
+      'Character sheets get a folder tab on their edge. Pull it out for a panel per automated feature: Brawler stances and Focus, Warlock Favor and the Patron Die, Witch hexes and lunar phases, Assassin marks and poisons, plus the Guardian’s Unstoppable Die and the Wizard’s Strange Patterns. Each feature has its own switch, so you can turn it off once the system does the same.',
+    hero: '01-martial-stances.webp',
+    features: [
+      ['Brawler: Martial Stances', 'Focus track, learning and shifting stances, one active stance at a time, dropping out on Severe damage, Favored and Refocus.'],
+      ['Warlock: Patron & Favor', 'Favor track, a Patron Die sized by level, calling on your patron for the next roll, Tribute and Patron’s Fury.'],
+      ['Witch: Moon and Hex', 'Roll the moon and only the matching lunar phase effect turns on; track and lift hexes against your limit.'],
+      ['Assassin: Marks and Poisons', 'Marked for Death with the right damage dice, and Toxic Concoctions tokens spent on each poison you know.'],
+    ],
+  },
   'dh-hotpot': {
     short: 'Hotpot',
     frame: 'Beast Feast',

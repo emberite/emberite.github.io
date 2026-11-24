@@ -360,7 +360,7 @@ function render(mods) {
       <div class="wrap hero-grid">
         <div class="hero-copy">
           <h1>Tools for the tables of Daggerheart’s campaign frames</h1>
-          <p class="lede">Free, open-source Foundry VTT modules that turn a campaign frame’s rules into things the whole table can see and touch.</p>
+          <p class="lede">Free, open-source Foundry VTT modules that turn campaign frame rules and class features into things the whole table can see and touch.</p>
           <div class="actions">
             <a class="btn primary" href="#modules">Browse the modules</a>
             <a class="btn ghost" href="#install">How to install</a>
@@ -374,7 +374,7 @@ function render(mods) {
 
     <section class="wrap strip" aria-label="Notes">
       <p class="note"><strong>AI Code - Not AI Art.</strong> The modules use no AI-generated art. Their images come from Foundry VTT, the Daggerheart system, or the official Daggerheart Core Rulebook and Hope &amp; Fear modules. Horizon’s hex map tiles are <a href="https://cuddlyclover.itch.io/fantasy-hex-tiles">Fantasy Hex Tiles</a> by The Clover Patch (CC BY 4.0). Custom Beast Feast artwork and tokens for Hotpot have been commissioned from a human artist and will be added once they’re ready.</p>
-      <p class="note"><strong>One frame at a time.</strong> Each module is built for its own campaign frame, so only one of them can be active in a world. Enabling a second one prompts the GM to choose.</p>
+      <p class="note"><strong>One frame at a time.</strong> Each campaign-frame module is built for its own frame, so only one of them can be active in a world. Enabling a second one prompts the GM to choose. Tweaks works alongside any of them.</p>
     </section>
 
     <div id="modules" class="modules">
@@ -384,9 +384,9 @@ function render(mods) {
     <section class="wrap howto" id="install" aria-labelledby="install-title">
       <h2 id="install-title">Installing a module</h2>
       <ol class="steps">
-        <li><span>1</span><div><h3>Get the requirements</h3><p>Foundry VTT v14, the Daggerheart system version listed under the module, and the official content module the frame comes from (Core Rulebook or Hope &amp; Fear). The modules load that content at runtime and include none of it.</p></div></li>
+        <li><span>1</span><div><h3>Get the requirements</h3><p>Foundry VTT v14, the Daggerheart system version listed under the module and, for a campaign-frame module, the official content module the frame comes from (Core Rulebook or Hope &amp; Fear). The modules load that content at runtime and include none of it.</p></div></li>
         <li><span>2</span><div><h3>Paste the manifest</h3><p>In Foundry’s setup screen, open <strong>Add-on Modules → Install Module</strong>, paste the module’s manifest URL from above and click <strong>Install</strong>.</p></div></li>
-        <li><span>3</span><div><h3>Enable it in your world</h3><p>Turn it on under <strong>Manage Modules</strong>. Its tools appear in the Daggerheart sidebar menu, under the campaign frame’s name.</p></div></li>
+        <li><span>3</span><div><h3>Enable it in your world</h3><p>Turn it on under <strong>Manage Modules</strong>. Campaign-frame tools appear in the Daggerheart sidebar menu, under the frame’s name. Tweaks adds a tab to the edge of character sheets.</p></div></li>
       </ol>
     </section>
 
@@ -414,7 +414,7 @@ function render(mods) {
           <h3>Requesting a feature</h3>
           <ul class="checklist">
             <li>What you’d like to do at the table</li>
-            <li>Which rule or part of the campaign frame it’s about, with a page reference if you have one</li>
+            <li>Which rule, class feature or part of the campaign frame it’s about, with a page reference if you have one</li>
             <li>How you handle it today, without the feature</li>
           </ul>
         </div>
