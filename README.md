@@ -9,3 +9,7 @@ node build.mjs   # reads GITHUB_ACCESS_TOKEN from the environment or .env
 ```
 
 This rewrites `index.html`, `data.json` and `assets/screenshots/`. The hand-written copy (taglines, feature highlights, accent colors, which screenshot leads each section) lives in `content.mjs`. A new `dh-*` repo shows up automatically, using its repo description until it gets an entry there.
+
+## Deployment
+
+`.github/workflows/deploy.yml` builds and publishes the site to GitHub Pages on every push to `main`, once a day, and when run from the Actions tab. The generated files aren't committed. A module's release workflow can also trigger a rebuild with a `repository_dispatch` event of type `module-released`.

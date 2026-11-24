@@ -1,0 +1,51 @@
+name: Build and deploy
+
+# Rebuilds the site from the dh-* repositories and publishes it to GitHub Pages.
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 5 * * *'   # daily, picks up new releases, screenshots and repos
+  workflow_dispatch:        # "Run workflow" button in the Actions tab
+  repository_dispatch:      # lets a module's release workflow trigger a rebuild
+    types: [module-released]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the site
+        run: node build.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Collect the published files
+        run: |
+          mkdir _site
+          cp -r index.html styles.css app.js assets .nojekyll _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

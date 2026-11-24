@@ -171,7 +171,8 @@ async function collect() {
       version: (release?.tag_name ?? manifest.version ?? '').replace(/^v/, ''),
       released: release?.published_at ?? repo.pushed_at,
       releaseUrl: release?.html_url ?? `${repo.html_url}/releases`,
-      zip: zip?.browser_download_url ?? manifest.download ?? null,
+      // Always the newest release's zip, so the link never goes stale.
+      zip: zip ? `${repo.html_url}/releases/latest/download/module.zip` : (manifest.download ?? null),
       manifestUrl: manifest.manifest ?? `${repo.html_url}/releases/latest/download/module.json`,
       foundry: manifest.compatibility ?? {},
       system: (rel.systems ?? []).map(dep)[0] ?? null,
