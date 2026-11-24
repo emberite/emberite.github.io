@@ -109,11 +109,13 @@ svg { width: 1em; height: 1em; flex: none; }
   border: 1px solid var(--line, rgb(255 255 255 / .08)); background: rgb(0 0 0 / .35); box-shadow: var(--shadow);
 }
 .carousel-track { display: flex; margin: 0; padding: 0; list-style: none; transition: transform .6s cubic-bezier(.45,0,.2,1); }
-.slide { flex: 0 0 100%; min-width: 0; }
+/* Slides share the tallest one's height; the caption fills whatever is left. */
+.slide { flex: 0 0 100%; min-width: 0; display: flex; flex-direction: column; }
 .slide > a { display: block; }
 .slide img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
 .slide-caption {
   display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 14px 18px 16px;
+  flex: 1; align-content: flex-start;
   border-top: 3px solid var(--accent); background: rgb(0 0 0 / .45); min-height: 4.6em;
 }
 .slide-caption a { font-family: 'Fraunces', serif; font-weight: 700; font-size: 20px; color: var(--accent); text-decoration: none; }
