@@ -23,6 +23,8 @@ export const modules = {
     frame: 'Character tools',
     source: 'Any campaign',
     accent: '#e8645a',
+    // Dark navy for the glow, button and banner backgrounds; the accent stays for text.
+    surface: '#0f1424',
     tagline: 'Build and level up characters by picking cards, and let the sheet track the class features.',
     blurb:
       'Character creation and level up become full-screen wizards: click the system’s own illustrated cards for class, subclass, ancestry, community, domain cards and gear instead of dragging items into slots, and the character is written by the system’s own code. On the sheet, a pull-out drawer automates the class features the system leaves to the table. Every tool has its own switch.',

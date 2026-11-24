@@ -192,6 +192,7 @@ async function collect() {
       frame: c.frame ?? null,
       source: c.source ?? null,
       accent: c.accent ?? '#f08a3c',
+      surface: c.surface ?? null,
       tagline: c.tagline ?? repo.description ?? '',
       blurb: c.blurb ?? '',
       features: c.features ?? [],
@@ -244,12 +245,19 @@ function depList(m) {
   return `<ul class="deps">${items.join('')}</ul>`;
 }
 
+// --accent colours text, lines and dots. A module may also set a surface colour
+// (content.mjs `surface`) for its glow, button and banner backgrounds.
+function accentVars(m) {
+  const a = `--accent:${esc(m.accent)}`;
+  return m.surface ? `${a};--surface:${esc(m.surface)}` : a;
+}
+
 function moduleSection(m, i) {
   const [hero, ...rest] = m.shots;
   const gallery = rest.map((s, j) => `
           <li><button class="thumb" type="button" data-gallery="${esc(m.name)}" data-index="${j + 1}" aria-label="Enlarge: ${esc(s.alt)}">${img(s, { sizes: '(max-width: 700px) 45vw, 220px' })}</button></li>`).join('');
   return `
-    <section class="module${i % 2 ? ' flip' : ''}" id="${esc(m.name)}" style="--accent:${esc(m.accent)}" aria-labelledby="${esc(m.name)}-title">
+    <section class="module${i % 2 ? ' flip' : ''}" id="${esc(m.name)}" style="${accentVars(m)}" aria-labelledby="${esc(m.name)}-title">
       <div class="module-grid">
         <div class="module-copy">
           <p class="eyebrow">${m.frame ? `<span>${esc(m.frame)}</span>` : ''}${m.source ? `<span class="muted">${esc(m.source)}</span>` : ''}</p>
@@ -306,7 +314,7 @@ function issueUrl(m, kind) {
 
 function supportRow(m) {
   return `
-        <li style="--accent:${esc(m.accent)}">
+        <li style="${accentVars(m)}">
           <span class="support-name">${esc(m.short)}</span>
           <a class="btn" href="${esc(issueUrl(m, 'bug'))}">Report a bug</a>
           <a class="btn" href="${esc(issueUrl(m, 'feature'))}">Request a feature</a>
@@ -346,7 +354,7 @@ function render(mods) {
     <nav class="wrap nav" aria-label="Main">
       <a class="brand" href="#top">${avatar}<span>emberite</span></a>
       <ul class="nav-links">
-        ${mods.map((m) => `<li><a href="#${esc(m.name)}" style="--accent:${esc(m.accent)}">${esc(m.short)}</a></li>`).join('\n        ')}
+        ${mods.map((m) => `<li><a href="#${esc(m.name)}" style="${accentVars(m)}">${esc(m.short)}</a></li>`).join('\n        ')}
       </ul>
       <a class="nav-support" href="#support">Support</a>
       ${site.discord ? `<a class="nav-gh" href="${esc(site.discord)}" aria-label="emberite on Discord">${icon.discord}</a>` : ''}
@@ -369,7 +377,7 @@ function render(mods) {
         <section class="carousel" aria-roledescription="carousel" aria-label="Module screenshots">
           <div class="carousel-frame">
             <ul class="carousel-track" aria-live="polite">
-              ${heroShots.map(({ m, s }, i) => `<li class="slide" aria-roledescription="slide" aria-label="${i + 1} of ${heroShots.length}: ${esc(m.short)}" style="--accent:${esc(m.accent)}"${i ? ' inert' : ''}>
+              ${heroShots.map(({ m, s }, i) => `<li class="slide" aria-roledescription="slide" aria-label="${i + 1} of ${heroShots.length}: ${esc(m.short)}" style="${accentVars(m)}"${i ? ' inert' : ''}>
                 <a href="#${esc(m.name)}">${img(s, { eager: i === 0, sizes: '(max-width: 960px) 100vw, 560px' })}</a>
                 <div class="slide-caption"><a href="#${esc(m.name)}">${esc(m.short)}</a><span>${esc(m.tagline)}</span></div>
               </li>`).join('\n              ')}
@@ -378,7 +386,7 @@ function render(mods) {
             <button class="carousel-nav next" type="button" aria-label="Next module">›</button>
           </div>
           <div class="carousel-dots">
-            ${heroShots.map(({ m }, i) => `<button type="button" style="--accent:${esc(m.accent)}" aria-label="Show ${esc(m.short)}"${i ? '' : ' aria-current="true"'}></button>`).join('')}
+            ${heroShots.map(({ m }, i) => `<button type="button" style="${accentVars(m)}" aria-label="Show ${esc(m.short)}"${i ? '' : ' aria-current="true"'}></button>`).join('')}
           </div>
         </section>
       </div>
