@@ -11,11 +11,11 @@ export const site = {
   discord: 'https://discord.gg/PjqhABeTm',
   title: 'emberite · Daggerheart modules for Foundry VTT',
   description:
-    'Free Foundry VTT modules for the campaign frames of Daggerheart: cooking with Hotpot, factions with Five Banners, hex crawls with Horizon and the Weredragon table tools.',
+    'Free Foundry VTT modules for the campaign frames of Daggerheart: cooking with Hotpot, factions with Five Banners, hex crawls with Horizon, the Weredragon table tools and colossus fights with Colossus.',
 };
 
 // Order of the sections on the page. Repos not listed here come after, by name.
-export const order = ['dh-hotpot', 'dh-5banners', 'dh-horizon', 'dh-weredragon'];
+export const order = ['dh-hotpot', 'dh-5banners', 'dh-horizon', 'dh-weredragon', 'dh-colossus'];
 
 export const modules = {
   'dh-hotpot': {
@@ -80,6 +80,22 @@ export const modules = {
       ['Night Sky Reading', 'The players roll the stars, the GM reads the sky into a constellation, and the five revelations appear for everyone.'],
       ['Forlorne Lykona', 'Her Faun and Dragon forms, with Transform swapping the token while keeping HP, Stress and conditions.'],
       ['Curses, automated', 'Weredrake and Petrified curses as status conditions that reshape or petrify the token, broken by the Keys to Victory.'],
+    ],
+  },
+  'dh-colossus': {
+    short: 'Colossus',
+    frame: 'Colossus of the Drylands',
+    source: 'Daggerheart Core Rulebook',
+    accent: '#d9ab23',
+    tagline: 'Climb the colossi of the Drylands, segment by segment.',
+    blurb:
+      'A live board in the shape of the colossus, built on the system’s colossus adversaries: every segment a card with its HP, rules and the PCs riding it. Players climb and leap from segment to segment, the segment rules run themselves, and the Emergence of Kudamat tracks the power he siphons.',
+    hero: '01-board-ikeri.webp',
+    features: [
+      ['The Colossus Board', 'The book’s notecard map as a live window: HP, Difficulty, Broken tokens and riders on every segment, with a layout editor for your own colossi.'],
+      ['Climbing', 'Climb onto a segment or leap to an adjacent one with an Agility or Strength Roll; advantage on attacks against the segment you ride.'],
+      ['Segment rules, automated', 'Fatal, Chain, Strike, Armored, Weak Point, Invulnerable, Protected, Cascade and Collapse, through to the colossus’s defeat.'],
+      ['Emergence of Kudamat', 'Rests during a hunt mark the Siphoning Track, slain colossi shatter their shards, and Kudamat is built from his Power.'],
     ],
   },
 };
