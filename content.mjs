@@ -23,7 +23,7 @@ export const modules = {
     tagline: 'Cooking as a shared, animated scene at the table.',
     blurb:
       'Throw ingredients into the pot, roll the flavor dice, collect matches and serve the Meal Rating to the party. Every connected player watches the cook live, and every dish lands in the party cookbook.',
-    hero: '02-prep-filled.webp',
+    hero: 'kitchen-pot.webp',
     features: [
       ['The kitchen', 'Prep, cook and serve in one window: the pantry, the pot, the flavor dice and the recipe card, with Last Drop, Risky, Spicy and Built for Speed handled for you.'],
       ['Cooking together', 'Call everyone to the pot and the kitchen opens for every player, mirroring each roll, match and discard.'],

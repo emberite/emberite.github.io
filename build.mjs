@@ -78,15 +78,25 @@ function imageSize(buf) {
   return null;
 }
 
-// Alt text of every image in the README, keyed by file name.
-function readmeCaptions(readme) {
-  const out = {};
-  for (const [, alt, src] of readme.matchAll(/!\[([^\]]*)\]\(([^)\s]+)\)/g)) {
-    const file = src.split('/').pop();
-    if (alt && !out[file]) out[file] = alt;
+const IMAGE = /\.(webp|png|jpe?g|gif|avif)$/i;
+
+// Images the README shows from inside the repo, in reading order, with their alt text.
+function readmeImages(readme) {
+  const out = new Map();
+  const add = (src, alt) => {
+    if (/^(https?:|data:|\/\/)/.test(src) || !IMAGE.test(src.split(/[?#]/)[0])) return;
+    const path = src.split(/[?#]/)[0].replace(/^\.?\//, '');
+    if (!out.has(path) || (!out.get(path) && alt)) out.set(path, alt ?? '');
+  };
+  for (const [, alt, src] of readme.matchAll(/!\[([^\]]*)\]\(<?([^)\s>]+)>?(?:\s+"[^"]*")?\)/g)) add(src, alt);
+  for (const [tag] of readme.matchAll(/<img\b[^>]*>/gi)) {
+    const src = tag.match(/\bsrc=["']([^"']+)["']/i)?.[1];
+    if (src) add(src, tag.match(/\balt=["']([^"']*)["']/i)?.[1] ?? '');
   }
   return out;
 }
+
+const fallbackAlt = (path) => path.split('/').pop().replace(/^\d+-|-v\d+|\.\w+$/g, '').replace(/[-_]/g, ' ');
 
 const KNOWN_DEPS = {
   'daggerheart-core': ['Daggerheart Core Rulebook', 'https://www.foundryvtt.store/products/daggerheart-core'],
@@ -121,10 +131,10 @@ async function collect() {
   for (const repo of repos) {
     const name = repo.name;
     process.stdout.write(`${name}… `);
-    const [release, readme, shotList] = await Promise.all([
+    const [release, readme, tree] = await Promise.all([
       gh(`/repos/${site.owner}/${name}/releases/latest`, { optional: true }),
       gh(`/repos/${site.owner}/${name}/readme`, { raw: true, optional: true }),
-      gh(`/repos/${site.owner}/${name}/contents/docs/screenshots`, { optional: true }),
+      gh(`/repos/${site.owner}/${name}/git/trees/${repo.default_branch}?recursive=1`),
     ]);
 
     // Prefer the released module.json: it carries the stamped version.
@@ -138,21 +148,29 @@ async function collect() {
       manifest = text ? JSON.parse(text) : {};
     }
 
-    const captions = readme ? readmeCaptions(readme) : {};
-    const files = (shotList ?? []).filter((f) => f.type === 'file' && /\.(webp|png|jpe?g|gif)$/i.test(f.name));
-    if (!files.length) throw new Error(`${name} has no screenshots in docs/screenshots`);
+    // Screenshots: every image the README shows, in README order, then any other
+    // image under docs/ (whatever the folder is called).
+    const blobs = new Set(tree.tree.filter((t) => t.type === 'blob').map((t) => t.path));
+    const shown = readme ? readmeImages(readme) : new Map();
+    const paths = [...shown.keys()].filter((p) => blobs.has(p));
+    for (const p of [...blobs].sort()) if (p.startsWith('docs/') && IMAGE.test(p) && !paths.includes(p)) paths.push(p);
+    if (!paths.length) throw new Error(`${name} has no screenshots: no README images and no images under docs/`);
 
     await mkdir(join(shotsRoot, name), { recursive: true });
     const shots = [];
-    for (const f of files) {
-      const buf = await download(f.download_url);
-      await writeFile(join(shotsRoot, name, f.name), buf);
+    for (const path of paths) {
+      const raw = `https://raw.githubusercontent.com/${site.owner}/${name}/${repo.default_branch}/${path.split('/').map(encodeURIComponent).join('/')}`;
+      const buf = await download(raw);
+      const file = path.replace(/^docs\//, '').replace(/\//g, '-');
+      await writeFile(join(shotsRoot, name, file), buf);
       const size = imageSize(buf) ?? { w: 1200, h: 800 };
-      shots.push({ file: f.name, src: `assets/screenshots/${name}/${f.name}`, alt: captions[f.name] ?? f.name.replace(/^\d+-|-v\d+|\.\w+$/g, '').replace(/-/g, ' '), ...size });
+      shots.push({ file: path.split('/').pop(), src: `assets/screenshots/${name}/${file}`, alt: shown.get(path) || fallbackAlt(path), ...size });
     }
 
+    // Lead screenshot: the one named in content.mjs if it still exists, else the README's first.
     const c = content[name] ?? {};
     const heroIdx = Math.max(0, shots.findIndex((s) => s.file === c.hero));
+    if (c.hero && !shots.some((s) => s.file === c.hero)) console.warn(`(hero ${c.hero} not found, using ${shots[0].file}) `);
     shots.unshift(...shots.splice(heroIdx, 1));
 
     const rel = manifest.relationships ?? {};
