@@ -284,6 +284,33 @@ function moduleSection(m, i) {
     </section>`;
 }
 
+function issueUrl(m, kind) {
+  const bug = [
+    '**What happened?**', '', '', '**What did you expect?**', '', '',
+    '**Steps to reproduce**', '1. ', '', '**Versions**', '- Foundry VTT: ', '- Daggerheart system: ',
+    `- ${m.short}: v${m.version}`, '- Other active modules: ', '', '**Console errors (F12 → Console)**', '',
+  ].join('\n');
+  const feature = [
+    '**What would you like to do at the table?**', '', '',
+    '**Which rule or part of the campaign frame is it about?** (a page reference helps)', '', '',
+    '**How do you handle it today?**', '',
+  ].join('\n');
+  const q = new URLSearchParams(kind === 'bug'
+    ? { labels: 'bug', title: '[Bug] ', body: bug }
+    : { labels: 'enhancement', title: '[Feature] ', body: feature });
+  return `${m.url}/issues/new?${q}`;
+}
+
+function supportRow(m) {
+  return `
+        <li style="--accent:${esc(m.accent)}">
+          <span class="support-name">${esc(m.short)}</span>
+          <a class="btn" href="${esc(issueUrl(m, 'bug'))}">Report a bug</a>
+          <a class="btn" href="${esc(issueUrl(m, 'feature'))}">Request a feature</a>
+          <a class="support-open" href="${esc(m.url)}/issues">Open issues</a>
+        </li>`;
+}
+
 function render(mods) {
   const avatar = '<img class="avatar" src="assets/avatar.png" alt="" width="32" height="32">';
   const heroShots = mods.slice(0, 4).map((m) => ({ m, s: m.shots[0] }));
@@ -317,6 +344,7 @@ function render(mods) {
       <ul class="nav-links">
         ${mods.map((m) => `<li><a href="#${esc(m.name)}" style="--accent:${esc(m.accent)}">${esc(m.short)}</a></li>`).join('\n        ')}
       </ul>
+      <a class="nav-support" href="#support">Support</a>
       <a class="nav-gh" href="https://github.com/${site.owner}" aria-label="emberite on GitHub">${icon.github}</a>
     </nav>
   </header>
@@ -355,6 +383,35 @@ function render(mods) {
         <li><span>2</span><div><h3>Paste the manifest</h3><p>In Foundry’s setup screen, open <strong>Add-on Modules → Install Module</strong>, paste the module’s manifest URL from above and click <strong>Install</strong>.</p></div></li>
         <li><span>3</span><div><h3>Enable it in your world</h3><p>Turn it on under <strong>Manage Modules</strong>. Its tools appear in the Daggerheart sidebar menu, under the campaign frame’s name.</p></div></li>
       </ol>
+    </section>
+
+    <section class="wrap howto support" id="support" aria-labelledby="support-title">
+      <h2 id="support-title">Support</h2>
+      <p class="section-lede">Found a bug or have an idea? Open an issue on the module’s GitHub repository. You need a free <a href="https://github.com/signup">GitHub account</a>. Search the open issues first: if someone already reported it, add a comment or a 👍 there instead.</p>
+      <div class="support-grid">
+        <div class="support-card">
+          <h3>Reporting a bug</h3>
+          <ul class="checklist">
+            <li>What happened, and what you expected instead</li>
+            <li>The steps to make it happen again</li>
+            <li>Your versions of Foundry VTT, the Daggerheart system and the module</li>
+            <li>Any other modules that are active</li>
+            <li>Errors from the browser console (<kbd>F12</kbd> → Console), as text</li>
+            <li>A screenshot, if it shows the problem</li>
+          </ul>
+        </div>
+        <div class="support-card">
+          <h3>Requesting a feature</h3>
+          <ul class="checklist">
+            <li>What you’d like to do at the table</li>
+            <li>Which rule or part of the campaign frame it’s about, with a page reference if you have one</li>
+            <li>How you handle it today, without the feature</li>
+          </ul>
+        </div>
+      </div>
+      <ul class="support-modules">
+        ${mods.map(supportRow).join('')}
+      </ul>
     </section>
   </main>
 
