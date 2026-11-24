@@ -6,6 +6,9 @@
 export const site = {
   owner: 'emberite',
   repoPrefix: 'dh-',
+  // Discord invite used in the top bar, the Support section and the footer.
+  // Use an invite set to never expire (the current one expires 2026-12-24).
+  discord: 'https://discord.gg/PjqhABeTm',
   title: 'emberite · Daggerheart modules for Foundry VTT',
   description:
     'Free Foundry VTT modules for the campaign frames of Daggerheart: cooking with Hotpot, factions with Five Banners, hex crawls with Horizon and the Weredragon table tools.',

@@ -221,6 +221,7 @@ const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '
 const date = (iso) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 
 const icon = {
+  discord: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.865-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.028C.533 9.046-.32 13.58.099 18.058a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.042-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.007.128 12.3 12.3 0 0 1-1.873.891.077.077 0 0 0-.041.107c.36.698.772 1.363 1.225 1.993a.076.076 0 0 0 .084.029 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.055c.5-5.177-.838-9.674-3.549-13.66a.06.06 0 0 0-.031-.029ZM8.02 15.331c-1.183 0-2.157-1.086-2.157-2.42 0-1.332.956-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.956 2.419-2.157 2.419Zm7.975 0c-1.183 0-2.157-1.086-2.157-2.42 0-1.332.955-2.418 2.157-2.418 1.21 0 2.176 1.095 2.157 2.419 0 1.333-.946 2.419-2.157 2.419Z"/></svg>',
   github: '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.87 2.34.67.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>',
   copy: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10" fill="none" stroke="currentColor" stroke-width="2"/></svg>',
   download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 21h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -347,6 +348,7 @@ function render(mods) {
         ${mods.map((m) => `<li><a href="#${esc(m.name)}" style="--accent:${esc(m.accent)}">${esc(m.short)}</a></li>`).join('\n        ')}
       </ul>
       <a class="nav-support" href="#support">Support</a>
+      ${site.discord ? `<a class="nav-gh" href="${esc(site.discord)}" aria-label="emberite on Discord">${icon.discord}</a>` : ''}
       <a class="nav-gh" href="https://github.com/${site.owner}" aria-label="emberite on GitHub">${icon.github}</a>
     </nav>
   </header>
@@ -390,6 +392,11 @@ function render(mods) {
     <section class="wrap howto support" id="support" aria-labelledby="support-title">
       <h2 id="support-title">Support</h2>
       <p class="section-lede">Found a bug or have an idea? Open an issue on the module’s GitHub repository. You need a free <a href="https://github.com/signup">GitHub account</a>. Search the open issues first: if someone already reported it, add a comment or a 👍 there instead.</p>
+      ${site.discord ? `<div class="discord-callout">
+        <span class="discord-icon">${icon.discord}</span>
+        <p><strong>Questions, or want to share how your table uses the modules?</strong> Join the emberite Discord to chat, ask for help and hear about new releases.</p>
+        <a class="btn primary" href="${esc(site.discord)}">Join the Discord</a>
+      </div>` : ''}
       <div class="support-grid">
         <div class="support-card">
           <h3>Reporting a bug</h3>
@@ -420,6 +427,7 @@ function render(mods) {
   <footer class="footer">
     <div class="wrap">
       <p class="brand small">${avatar}<span>emberite</span></p>
+      <p class="footer-links"><a href="https://github.com/${site.owner}">GitHub</a>${site.discord ? ` · <a href="${esc(site.discord)}">Discord</a>` : ''} · <a href="#support">Support</a></p>
       <p>The modules’ code is released under the MIT License. They are unofficial fan works, not affiliated with Darrington Press, Critical Role or Foundry Gaming. Daggerheart content and art are loaded from the official modules you own and are not distributed here; the screenshots show those modules in use.</p>
       <p class="muted">This product includes materials from the Daggerheart System Reference Document 2.0, © Critical Role, LLC. under the terms of the Darrington Press Community Gaming (DPCGL) License. More information can be found at <a href="https://www.daggerheart.com">daggerheart.com</a>. There are no previous modifications by others.</p>
       <p class="muted">Built from the <a href="https://github.com/${site.owner}?tab=repositories&amp;q=${encodeURIComponent(site.repoPrefix)}">${esc(site.repoPrefix)}* repositories</a> on ${esc(date(new Date().toISOString()))}.</p>
