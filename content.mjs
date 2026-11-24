@@ -22,8 +22,8 @@ export const modules = {
     short: 'Tweaks',
     frame: 'Character tools',
     source: 'Any campaign',
-    accent: '#e8645a',
-    // Dark navy for the glow, button and banner backgrounds; the accent stays for text.
+    accent: '#7b96f0',
+    // Navy for the glow, button and banner backgrounds; the lighter blue accent is for text and lines.
     surface: '#0f1424',
     tagline: 'Build and level up characters by picking cards, and let the sheet track the class features.',
     blurb:
