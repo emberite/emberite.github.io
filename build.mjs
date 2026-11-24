@@ -398,7 +398,7 @@ function render(mods) {
       <ol class="steps">
         <li><span>1</span><div><h3>Get the requirements</h3><p>Foundry VTT v14, the Daggerheart system version listed under the module and, for a campaign-frame module, the official content module the frame comes from (Core Rulebook or Hope &amp; Fear). The modules load that content at runtime and include none of it.</p></div></li>
         <li><span>2</span><div><h3>Paste the manifest</h3><p>In Foundry’s setup screen, open <strong>Add-on Modules → Install Module</strong>, paste the module’s manifest URL from above and click <strong>Install</strong>.</p></div></li>
-        <li><span>3</span><div><h3>Enable it in your world</h3><p>Turn it on under <strong>Manage Modules</strong>. Campaign-frame tools appear in the Daggerheart sidebar menu, under the frame’s name. Tweaks adds a tab to the edge of character sheets.</p></div></li>
+        <li><span>3</span><div><h3>Enable it in your world</h3><p>Turn it on under <strong>Manage Modules</strong>. Campaign-frame tools appear in the Daggerheart sidebar menu, under the frame’s name. Tweaks opens its wizards from a character’s Character Setup and level up buttons, and adds a tab to the edge of the sheet.</p></div></li>
       </ol>
     </section>
 

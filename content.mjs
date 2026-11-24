@@ -11,7 +11,7 @@ export const site = {
   discord: 'https://discord.gg/PjqhABeTm',
   title: 'emberite · Daggerheart modules for Foundry VTT',
   description:
-    'Free Foundry VTT modules for Daggerheart: class feature automation with Tweaks, cooking with Hotpot, factions with Five Banners, hex crawls with Horizon, the Weredragon table tools and colossus fights with Colossus.',
+    'Free Foundry VTT modules for Daggerheart: character creation, level up and class features with Tweaks, cooking with Hotpot, factions with Five Banners, hex crawls with Horizon, the Weredragon table tools and colossus fights with Colossus.',
 };
 
 // Order of the sections on the page. Repos not listed here come after, by name.
@@ -20,18 +20,18 @@ export const order = ['dh-emberite-tweaks', 'dh-hotpot', 'dh-5banners', 'dh-hori
 export const modules = {
   'dh-emberite-tweaks': {
     short: 'Tweaks',
-    frame: 'Class features',
+    frame: 'Character tools',
     source: 'Any campaign',
     accent: '#e8645a',
-    tagline: 'A pull-out drawer that automates the class features the system leaves to the table.',
+    tagline: 'Build and level up characters by picking cards, and let the sheet track the class features.',
     blurb:
-      'Character sheets get a folder tab on their edge. Pull it out for a panel per automated feature: Brawler stances and Focus, Warlock Favor and the Patron Die, Witch hexes and lunar phases, Assassin marks and poisons, plus the Guardian’s Unstoppable Die and the Wizard’s Strange Patterns. Each feature has its own switch, so you can turn it off once the system does the same.',
-    hero: '01-martial-stances.webp',
+      'Character creation and level up become full-screen wizards: click the system’s own illustrated cards for class, subclass, ancestry, community, domain cards and gear instead of dragging items into slots, and the character is written by the system’s own code. On the sheet, a pull-out drawer automates the class features the system leaves to the table. Every tool has its own switch.',
+    hero: '06-creation-classes-v2.webp',
     features: [
-      ['Brawler: Martial Stances', 'Focus track, learning and shifting stances, one active stance at a time, dropping out on Severe damage, Favored and Refocus.'],
-      ['Warlock: Patron & Favor', 'Favor track, a Patron Die sized by level, calling on your patron for the next roll, Tribute and Patron’s Fury.'],
-      ['Witch: Moon and Hex', 'Roll the moon and only the matching lunar phase effect turns on; track and lift hexes against your limit.'],
-      ['Assassin: Marks and Poisons', 'Marked for Death with the right damage dice, and Toxic Concoctions tokens spent on each poison you know.'],
+      ['Character creation', 'Step by step from class and subclass to background, with mixed ancestries, the trait array, suggested or hand-picked gear and a review of every card you chose.'],
+      ['Level up', 'Advancement tiles with their slots, the follow-up choices right below, multiclassing, and the new domain cards sent to your loadout or vault.'],
+      ['Class features drawer', 'Brawler stances and Focus, Warlock Favor and Patron Die, Witch moon and hexes, Assassin marks and poisons, and the Guardian’s Unstoppable Die.'],
+      ['Core Rulebook look', 'With the Core Rulebook and Hope & Fear modules, their card art, portraits and banners fill the wizards; without them, the system’s icons do.'],
     ],
   },
   'dh-hotpot': {
