@@ -339,7 +339,8 @@ function render(mods) {
       </div>
     </section>
 
-    <section class="wrap strip" aria-label="Note">
+    <section class="wrap strip" aria-label="Notes">
+      <p class="note"><strong>No AI artwork.</strong> The modules use no AI-generated art. Every image comes from Foundry VTT, the Daggerheart system, or the official Daggerheart Core Rulebook and Hope &amp; Fear modules, except Horizon’s hex map tiles: <a href="https://cuddlyclover.itch.io/fantasy-hex-tiles">Fantasy Hex Tiles</a> by The Clover Patch (CC BY 4.0).</p>
       <p class="note"><strong>One frame at a time.</strong> Each module is built for its own campaign frame, so only one of them can be active in a world. Enabling a second one prompts the GM to choose.</p>
     </section>
 

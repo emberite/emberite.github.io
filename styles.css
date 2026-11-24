@@ -143,7 +143,8 @@ svg { width: 1em; height: 1em; flex: none; }
 }
 
 /* ---------- strip ---------- */
-.strip { position: relative; z-index: 2; margin-top: -28px; }
+.strip { position: relative; z-index: 2; margin-top: -28px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 860px) { .strip { grid-template-columns: 1fr; } }
 .note {
   margin: 0; padding: 16px 22px; font-size: 15px; color: var(--muted);
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
