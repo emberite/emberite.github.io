@@ -284,20 +284,11 @@ function moduleSection(m, i) {
     </section>`;
 }
 
+// Opens the repo's issue form; the form's field ids can be pre-filled from the URL.
 function issueUrl(m, kind) {
-  const bug = [
-    '**What happened?**', '', '', '**What did you expect?**', '', '',
-    '**Steps to reproduce**', '1. ', '', '**Versions**', '- Foundry VTT: ', '- Daggerheart system: ',
-    `- ${m.short}: v${m.version}`, '- Other active modules: ', '', '**Console errors (F12 → Console)**', '',
-  ].join('\n');
-  const feature = [
-    '**What would you like to do at the table?**', '', '',
-    '**Which rule or part of the campaign frame is it about?** (a page reference helps)', '', '',
-    '**How do you handle it today?**', '',
-  ].join('\n');
   const q = new URLSearchParams(kind === 'bug'
-    ? { labels: 'bug', title: '[Bug] ', body: bug }
-    : { labels: 'enhancement', title: '[Feature] ', body: feature });
+    ? { template: 'bug_report.yml', 'module-version': m.version }
+    : { template: 'feature_request.yml' });
   return `${m.url}/issues/new?${q}`;
 }
 
