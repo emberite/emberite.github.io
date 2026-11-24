@@ -261,7 +261,7 @@ svg { width: 1em; height: 1em; flex: none; }
 
 /* ---------- footer ---------- */
 .footer { padding: 40px 0 56px; background: var(--bg-2); border-top: 1px solid var(--line); font-size: 14px; }
-.footer p { max-width: 80ch; margin: 0 0 12px; }
+.footer p { margin: 0 0 12px; }
 
 /* ---------- lightbox ---------- */
 .lightbox {
